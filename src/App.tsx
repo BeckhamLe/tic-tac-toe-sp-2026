@@ -10,8 +10,8 @@ function App() {
 
 function getInitialGame() {
   let initialGameState = createGame()
-  makeMove(initialGameState, 3)
-  makeMove(initialGameState, 0)
+  initialGameState = makeMove(initialGameState, 3)
+  initialGameState = makeMove(initialGameState, 0)
   return initialGameState
 }
 
