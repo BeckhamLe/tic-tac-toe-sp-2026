@@ -17,6 +17,7 @@ export type GameState = {
 };
 
 export function createGame(): GameState {
+  
   return {
     board: [null, null, null, null, null, null, null, null, null],
     currentPlayer: "X",
