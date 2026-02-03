@@ -23,10 +23,12 @@ export function createGame(): GameState {
   };
 }
 
+// Need to do this
 export function makeMove(state: GameState, position: number): GameState {
   return state
 }
 
+//Neeed to do this
 export function getWinner(state: GameState): Player | null {
   return null;
 }
