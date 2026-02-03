@@ -1,0 +1,11 @@
+td {
+  padding: 10px 10px 10px 10px;  
+}
+td{
+    border-width: 2px;
+    border-style: solid;
+    border-color: black;
+}
+body{
+    height: 200px;
+}
