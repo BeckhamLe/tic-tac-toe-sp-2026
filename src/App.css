@@ -1,27 +1,31 @@
 /* Format Board Game */
 table{
     border-collapse: collapse;
+    border: solid 0.2vw black;
+    /*width: 50%;*/
 }
-tbody{
+.object_app{
     display: flex;
     flex-flow: column wrap;
-    border: solid 0.2em black
+    justify-content: center;
+    align-items: center;
+    height: 70vw;
 }
 td {
-    height: 15vw;
-    width: 15vw;
-    font-size: 10vw;
+    height: 10vw;
+    width: 10vw;
+    font-size: 5vw;
     text-align: center;
 }
 
 /* ---------- Board Grid Borders -------------*/
 .middle_column{
-    border-left: solid 0.5vw black;
-    border-right: solid 0.5vw black;
+    border-left: solid 0.2vw black;
+    border-right: solid 0.2vw black;
 }
 
 #top_row, #middle_row{
-    border-bottom: solid 0.5vw black;
+    border-bottom: solid 0.2vw black;
 }
 /* ----------------------------------------- */
 

@@ -22,8 +22,8 @@ function App() {
   // TODO: display the gameState, and call `makeMove` when a player clicks a button
   return (
     <div className="object_app">
+      <p className="subheading_app">Current Player: {gameState.currentPlayer}</p>
       <table>
-        <p className="subheading_app">Current Player: {gameState.currentPlayer}</p>
         <tbody>
           <tr id="top_row">
             <td onClick={() => handleClick(0)}>{gameState.board[0]}</td>
