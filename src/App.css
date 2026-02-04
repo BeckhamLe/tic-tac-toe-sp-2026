@@ -1,11 +1,36 @@
+/* Format Board Game */
+table{
+    border-collapse: collapse;
+    border: solid 0.2vw black;
+    /*width: 50%;*/
+}
+.object_app{
+    display: flex;
+    flex-flow: column wrap;
+    justify-content: center;
+    align-items: center;
+    height: 70vw;
+}
 td {
-  padding: 10px 10px 10px 10px;  
+    height: 10vw;
+    width: 10vw;
+    font-size: 5vw;
+    text-align: center;
 }
-td{
-    border-width: 2px;
-    border-style: solid;
-    border-color: black;
+
+/* ---------- Board Grid Borders -------------*/
+.middle_column{
+    border-left: solid 0.2vw black;
+    border-right: solid 0.2vw black;
 }
-body{
-    height: 200px;
+
+#top_row, #middle_row{
+    border-bottom: solid 0.2vw black;
+}
+/* ----------------------------------------- */
+
+.subheading_app {
+    font-size: 3vw;
+    text-align: center;
+    margin: 0.3vw;
 }
