@@ -24,20 +24,22 @@ export function createGame(): GameState {
   };
 }
 
-// Need to do this
 export function makeMove(state: GameState, position: number): GameState {
   if(getWinner(state) === "X" || getWinner(state) === "O") throw new Error("Game is already over")
   if(!Number.isInteger(position)) throw new Error("Position must be an integer")
-  if(state.board[position] != null) throw new Error("Position is already occupied")
   if(position < 0) throw new Error("Position must be between 0 and 8")
   if(position > 8) throw new Error("Position must be between 0 and 8")
+  if(state.board[position] != null) throw new Error("Position is already occupied")
 
+  // Create a new game state to avoid mutating the original state
   let newState: GameState = {
     board: [...state.board],
     currentPlayer: state.currentPlayer,
   };
 
-  newState.board[position] = newState.currentPlayer
+  newState.board[position] = newState.currentPlayer // Place the current player's mark on the board for new game state
+
+  // Switch to the other player
   if(newState.currentPlayer === "X") {
     newState.currentPlayer = "O"
   } else {
@@ -47,7 +49,6 @@ export function makeMove(state: GameState, position: number): GameState {
   return newState
 }
 
-//Neeed to do this
 export function getWinner(state: GameState): Player | null {
   let winner: Player | null = null
   const board = state.board
