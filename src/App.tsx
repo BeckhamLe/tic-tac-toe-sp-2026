@@ -5,10 +5,11 @@ import './App.css'
 function App() {
   let [gameState, setGameState] = useState(getInitialGame())
 
+  // Checks for winner or draw after every move (gameState change)
   useEffect(() => {
     if(getWinner(gameState) != null){
       alert(`Winner is ${getWinner(gameState)}`)
-    } else if(getWinner(gameState) === null && !gameState.board.includes(null)){
+    } else if(getWinner(gameState) === null && !gameState.board.includes(null)){  // check for draw (if no winner and no nulls left on board)
       alert("Draw")
     }
   }, [gameState])
