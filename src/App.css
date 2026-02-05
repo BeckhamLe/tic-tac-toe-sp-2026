@@ -1,6 +1,6 @@
 /* Format Board Game */
 table{
-    border-collapse: collapse;
+    border-collapse: collapse;  /* collapse borders into single border (no gaps in between cells) */
     border: solid 0.2vw black;
     /*width: 50%;*/
 }
@@ -9,12 +9,13 @@ table{
     flex-flow: column wrap;
     justify-content: center;
     align-items: center;
-    height: 70vw;
+    height: 70vw;   /* set height in order for vertical and horizontal centering to work */
 }
+/* Format Board Cells */
 td {
-    height: 10vw;
+    height: 10vw;   /* set height and width of cells relative to viewport width for responsiveness */
     width: 10vw;
-    font-size: 5vw;
+    font-size: 5vw; /* set font size relative to viewport width for responsiveness */
     text-align: center;
 }
 
@@ -29,6 +30,7 @@ td {
 }
 /* ----------------------------------------- */
 
+/* Format Subheadings responsive to viewport width */
 .subheading_app {
     font-size: 3vw;
     text-align: center;

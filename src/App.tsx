@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
-import { createGame, makeMove, getWinner, type GameState } from "./tic-tac-toe";
-import gameServices from './services/game.ts'
-import './App.css'
+import { type GameState } from "./tic-tac-toe"; // Import GameState type for gameboard cells
+import gameServices from './services/game.ts'   // Import game services to interact with backend API
+import './App.css'  // Import CSS for appstyling
 
 function App() {
   const [gameState, setGameState] = useState<GameState | null>(null)
@@ -15,31 +15,33 @@ function App() {
       gameServices.getGame().then((initialGameState) => {
         setGameState(initialGameState)  // update game state to initial game state returned from server
       })
-    } else if(gameState && gameWinner != null){
-      if(gameWinner != null){
-        alert(`Winner is ${gameWinner}`)
-      } else if(gameWinner === null && !gameState.board.includes(null)){  // check for draw (if no winner and no nulls left on board)
-        alert("Draw")
-      }
+    } else if(gameWinner === null && !gameState.board.includes(null)){  // check for draw (if no winner and no nulls left on board)
+      alert("Draw")
+    } else if(gameWinner){                      // check for winner
+      alert(`Winner is ${gameWinner}`)
     }
-  }, [gameState])
+  }, [gameState])   // watches game state for changes
 
+  // If game state is not yet loaded, show loading message
   if(!gameState){
     return (
       <p>Loading</p>
     )
   }
 
+  // Handles a player's move when they click on a cell
   const handleClick = (position: number) => {
+    // Call the move service to make a move at the specified position
     gameServices.move(position).then((response) => {
-      setGameState(response.gameState)
-      setGameWinner(response.winner)
+      setGameState(response.gameState)  // update game state to new game state returned from server
+      setGameWinner(response.winner)    // update game winner
     })
   }
 
+  // Resets the game to its initial state
   const resetGame = () => {
     gameServices.reset().then((newGame) => {
-      setGameState(newGame)  // update game state to initial game state returned from server
+      setGameState(newGame)
       setGameWinner(null)
     })
   }
@@ -70,11 +72,6 @@ function App() {
       <button onClick={resetGame}>Reset</button>
     </div>
   );
-}
-
-function getInitialGame() {
-  let initialGameState = createGame()
-  return initialGameState
 }
 
 export default App;

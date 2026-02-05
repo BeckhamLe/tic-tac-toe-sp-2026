@@ -1,9 +1,9 @@
 import express from 'express';
 import ViteExpress from 'vite-express';
-import { createGame, getWinner, makeMove } from './src/tic-tac-toe.ts';
+import { createGame, getWinner, makeMove } from './src/tic-tac-toe.ts'; // Import game logic functions
 
-const app = express();
-app.use(express.json())
+const app = express();      // create express app
+app.use(express.json())     // middleware to parse JSON bodies
 
 let gameState = createGame();   // create initial game state
 
@@ -14,16 +14,16 @@ app.get('/game', (req, res) => {
 
 // Endpoint to make a move
 app.post('/move', (req, res) => {
-    const position = parseInt(req.body.position)
-    gameState = makeMove(gameState, position)
-    const winner = getWinner(gameState)
+    const position = parseInt(req.body.position)    // get position from request body and convert to an integer
+    gameState = makeMove(gameState, position)       // update game state by making the move
+    const winner = getWinner(gameState)         // check for winner after the move
 
-    res.json({gameState, winner})
+    res.json({gameState, winner})   // return updated game state and winner (if any)
 })
 
 app.post('/reset', (req, res) => {
-    gameState = createGame()
-    res.json(gameState)
+    gameState = createGame()    // reset game state to initial state
+    res.json(gameState)     // return reset game state
 })
 
 const PORT: number = 3001;
