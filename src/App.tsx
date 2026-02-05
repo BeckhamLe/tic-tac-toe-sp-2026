@@ -1,22 +1,47 @@
 import { useState, useEffect } from "react";
-import { createGame, makeMove, getWinner } from "./tic-tac-toe";
+import { createGame, makeMove, getWinner, type GameState } from "./tic-tac-toe";
+import gameServices from './services/game.ts'
 import './App.css'
 
 function App() {
-  let [gameState, setGameState] = useState(getInitialGame())
+  const [gameState, setGameState] = useState<GameState | null>(null)
+  const [gameWinner, setGameWinner] = useState(null) 
 
   // Checks for winner or draw after every move (gameState change)
   useEffect(() => {
-    if(getWinner(gameState) != null){
-      alert(`Winner is ${getWinner(gameState)}`)
-    } else if(getWinner(gameState) === null && !gameState.board.includes(null)){  // check for draw (if no winner and no nulls left on board)
-      alert("Draw")
+    // If game state doesn't exist yet
+    if(!gameState){
+      // use services to send a request and return back response in json format
+      gameServices.getGame().then((initialGameState) => {
+        setGameState(initialGameState)  // update game state to initial game state returned from server
+      })
+    } else if(gameState && gameWinner != null){
+      if(gameWinner != null){
+        alert(`Winner is ${gameWinner}`)
+      } else if(gameWinner === null && !gameState.board.includes(null)){  // check for draw (if no winner and no nulls left on board)
+        alert("Draw")
+      }
     }
   }, [gameState])
 
+  if(!gameState){
+    return (
+      <p>Loading</p>
+    )
+  }
+
   const handleClick = (position: number) => {
-    const newGameState = makeMove(gameState, position)
-    setGameState(newGameState)
+    gameServices.move(position).then((response) => {
+      setGameState(response.gameState)
+      setGameWinner(response.winner)
+    })
+  }
+
+  const resetGame = () => {
+    gameServices.reset().then((newGame) => {
+      setGameState(newGame)  // update game state to initial game state returned from server
+      setGameWinner(null)
+    })
   }
 
   // TODO: display the gameState, and call `makeMove` when a player clicks a button
@@ -42,6 +67,7 @@ function App() {
           </tr>
         </tbody>
       </table>
+      <button onClick={resetGame}>Reset</button>
     </div>
   );
 }
