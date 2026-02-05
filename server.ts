@@ -1,10 +1,11 @@
 import express from 'express';
 import ViteExpress from 'vite-express';
-import { createGame, getWinner, makeMove } from './src/tic-tac-toe.ts'; // Import game logic functions
+import { createGame, GameState, getWinner, makeMove } from './src/tic-tac-toe.ts'; // Import game logic functions
 
-const app = express();      // create express app
+export const app = express();      // create express app
 app.use(express.json())     // middleware to parse JSON bodies
 
+export let games = new Map<string, GameState>()     // Map of all existing game states
 let gameState = createGame();   // create initial game state
 
 // Endpoint to get start a new game
