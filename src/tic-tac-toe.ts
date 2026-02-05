@@ -14,13 +14,24 @@ export type Board = [Cell, Cell, Cell, Cell, Cell, Cell, Cell, Cell, Cell];
 export type GameState = {
   board: Board;
   currentPlayer: Player;
+  id: string;
 };
 
 export function createGame(): GameState {
-  
+  const unique_id = crypto.randomUUID()
+
   return {
     board: [null, null, null, null, null, null, null, null, null],
     currentPlayer: "X",
+    id: unique_id
+  };
+}
+
+export function resetGame(state: GameState): GameState {
+  return {
+    board: [null, null, null, null, null, null, null, null, null],
+    currentPlayer: "X",
+    id: state.id
   };
 }
 
@@ -35,6 +46,7 @@ export function makeMove(state: GameState, position: number): GameState {
   let newState: GameState = {
     board: [...state.board],
     currentPlayer: state.currentPlayer,
+    id: state.id
   };
 
   newState.board[position] = newState.currentPlayer // Place the current player's mark on the board for new game state
