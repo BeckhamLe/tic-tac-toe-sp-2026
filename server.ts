@@ -1,30 +1,84 @@
 import express from 'express';
 import ViteExpress from 'vite-express';
-import { createGame, GameState, getWinner, makeMove } from './src/tic-tac-toe.ts'; // Import game logic functions
+import { createGame, GameState, getWinner, makeMove, resetGame } from './src/tic-tac-toe.ts'; // Import game logic functions
 
 export const app = express();      // create express app
 app.use(express.json())     // middleware to parse JSON bodies
 
-export let games = new Map<string, GameState>()     // Map of all existing game states
-let gameState = createGame();   // create initial game state
+// Map of all existing game states
+export let allGames = new Map<string, GameState>()
 
-// Endpoint to get start a new game
-app.get('/game', (req, res) => {
-  res.json(gameState);  // return initial game state
+// Endpoint to create new game state
+app.post('/create', (req, res) => {
+    const newGameState = createGame()   // create a new game state
+    allGames.set(newGameState.id, newGameState)    // add it to the map of games and have it's ID be its key in map
+    res.json({gameState: newGameState});  // return new game state
 });
 
-// Endpoint to make a move
-app.post('/move', (req, res) => {
-    const position = parseInt(req.body.position)    // get position from request body and convert to an integer
-    gameState = makeMove(gameState, position)       // update game state by making the move
-    const winner = getWinner(gameState)         // check for winner after the move
-
-    res.json({gameState, winner})   // return updated game state and winner (if any)
+// Endpoint to get list of UUIDs of all existing game states
+app.get('/games', (req, res) => {
+    const allKeys = Array.from(allGames.keys())     // get iterator of all keys in map then convert it to an array
+    res.json({ allKeys })   // return array of all keys in an object and set to property named after itself
 })
 
-app.post('/reset', (req, res) => {
-    gameState = createGame()    // reset game state to initial state
-    res.json(gameState)     // return reset game state
+// Endpoint to find requested game state using game id and return it
+app.get('/games/:id', (req, res) => {
+    const gameId = req.params.id        // get the game state id in the endpoint url
+
+    // Check if game id requested exists
+    if(allGames.has(gameId)){
+        const foundGameState = allGames.get(gameId)           // use gameId to find the specific game state in map of games
+        
+        // check if game at key in map is null or not
+        if(foundGameState != null) {                    
+            res.json({gameState: foundGameState})   // if not, then return game state
+        } else{
+            res.status(404).json({error: `Game State at id: ${gameId} is null`})
+        }
+    } else {
+        res.status(404).json({error: `Game State requested using id: ${gameId} doesn't exist`})
+    }
+})
+
+// Endpoint to make a move
+app.post('/move/:id', (req, res) => {
+    const position = parseInt(req.body.position)    // get position from request body and convert to an integer
+    const gameId = req.params.id                // get the game state id in the endpoint url
+    
+    // Checks if game id requested exists
+    if(allGames.has(gameId)) {
+        const currGameState = allGames.get(gameId)           // use gameId to find the specific game state in map of games
+        if(currGameState != null) {
+            const newGameState = makeMove(currGameState, position)  // run makeMove to update the requested game state with the player's move and set new game state here
+            allGames.set(gameId, newGameState)                 // update the game state at requested key to new game state in map
+            
+            const winner = getWinner(newGameState)              // check for winner after move with new game state
+            res.json({gameState: newGameState, winner})                          // return new updated game state of the requested game state and winner (if any)
+        } else{
+            res.status(404).json({error: `Game State at id: ${gameId} is null`})
+        }
+    } else {
+        res.status(404).json({error: `Game State requested using id: ${gameId} doesn't exist`})
+    }
+})
+
+// Endpoint to reset a game state
+app.post('/reset/:id', (req, res) => {
+    const gameId = req.params.id
+
+    // Check if map has requested game state
+    if(allGames.has(gameId)) {
+        const currGameState = allGames.get(gameId)           // use gameId to find the specific game state in map of games
+        // check if game at key in map is null or not
+        if(currGameState != null) {
+            const freshGameState = resetGame(currGameState)     // reset the given game state
+            res.json({gameState: freshGameState})           // return new blank game state with same game id given in request
+        } else{
+            res.status(404).json({error: `Game State at id: ${gameId} is null`})
+        }
+    } else {
+        res.status(404).json({error: `Game State requested using id: ${gameId} doesn't exist`})
+    }
 })
 
 const PORT: number = 3001;
