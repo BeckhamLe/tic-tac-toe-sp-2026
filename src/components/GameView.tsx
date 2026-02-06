@@ -11,7 +11,7 @@ interface GameViewProps {
 const GameView = ({gameId, onBack}: GameViewProps) => {
     const [gameState, setGameState] = useState<GameState | null>(null)    // game state
     const [gameWinner, setGameWinner] = useState(null)                  // game winner state
-    
+
     // Checks for winner or draw after every move (gameState change)
     useEffect(() => {
         // If game state doesn't exist yet
@@ -28,6 +28,30 @@ const GameView = ({gameId, onBack}: GameViewProps) => {
             alert(`Winner is ${gameWinner}`)
         }
     }, [gameState])   // watches game state for changes
+
+    // Set up Web Socket
+    // runs once and then web socket and its event handlers exist in memory to be called upon when server sends message
+    useEffect(() => {
+        const ws = new WebSocket("ws://localhost:3001")     // establish WebSocket connection
+
+        // When websocket is open send message to server of game id selected
+        ws.onopen = () => {
+            ws.send(JSON.stringify({gameId: gameId}))
+        }
+
+        // Updates the game state if server sends a message with updated game state
+        // .onmessage = property you assign a function to that runs on the event when the server sends data to frontend
+        ws.onmessage = (event) => {
+            const updatedGameState = JSON.parse(event.data)     // convert the event.data from string -> usable JS object
+            setGameState(updatedGameState.gameState)        // sets game state to updated version sent from server
+        }
+
+        // function given to React that will run it when component gets unmounted from screen
+        return () => {
+            ws.close()  // close the websocket
+        }
+
+    }, [])
     
     // Prevents game from crashing
     if(gameState === null) {
