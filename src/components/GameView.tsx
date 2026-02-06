@@ -32,7 +32,11 @@ const GameView = ({gameId, onBack}: GameViewProps) => {
     // Set up Web Socket
     // runs once and then web socket and its event handlers exist in memory to be called upon when server sends message
     useEffect(() => {
-        const ws = new WebSocket("ws://localhost:3001")     // establish WebSocket connection
+        // checks what protocol the current page is using
+        const wsProtocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:'   // On local machine --> ws: (since it uses http:)
+                                                                                    // On Render --> wss: (since it uses https:)                                                                                                                                              
+        // sets up the url for the websocket to connect to Render server
+        const ws = new WebSocket(`${wsProtocol}//${window.location.host}`)          // window.location.host --> deployment link from Render
 
         // When websocket is open send message to server of game id selected
         ws.onopen = () => {
