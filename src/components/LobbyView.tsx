@@ -6,7 +6,7 @@ interface LobbyViewProps {
 }
 
 const LobbyView = ({ onSelectGame }: LobbyViewProps) => {
-    const [idsList, setIdsList] = useState<string[]>([])
+    const [idsList, setIdsList] = useState<string[]>([])    // state to hold all 
 
     useEffect(() => {
         gameServices.getAllGames().then((list) => {
