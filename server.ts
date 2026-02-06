@@ -12,7 +12,7 @@ export let allGames = new Map<string, GameState>()
 app.post('/create', (req, res) => {
     const newGameState = createGame()   // create a new game state
     allGames.set(newGameState.id, newGameState)    // add it to the map of games and have it's ID be its key in map
-    res.json({gameState: newGameState});  // return new game state
+    res.json({newGameId: newGameState.id});  // return new game state id
 });
 
 // Endpoint to get list of UUIDs of all existing game states
@@ -72,6 +72,7 @@ app.post('/reset/:id', (req, res) => {
         // check if game at key in map is null or not
         if(currGameState != null) {
             const freshGameState = resetGame(currGameState)     // reset the given game state
+            allGames.set(freshGameState.id, freshGameState)
             res.json({gameState: freshGameState})           // return new blank game state with same game id given in request
         } else{
             res.status(404).json({error: `Game State at id: ${gameId} is null`})

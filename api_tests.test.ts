@@ -8,8 +8,7 @@ describe ('POST /create', () => {
             .post('/create')
             .expect(200)
         
-        expect(response.body.gameState).toBeDefined()   // check if new game state exists in response
-        expect(response.body.gameState.id).toBeDefined()    // check if game state has unique id assigned
+        expect(response.body.newGameId).toBeDefined()    // check if game state has unique id assigned
     })
 })
 
