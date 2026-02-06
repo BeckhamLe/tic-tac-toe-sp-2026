@@ -1,5 +1,5 @@
 import axios from 'axios'
-const baseUrl = 'http://localhost:3001'
+const baseUrl = ''
 
 // Request to create a new game state
 const createGame = () => {
