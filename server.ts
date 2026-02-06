@@ -97,7 +97,7 @@ app.post('/reset/:id', (req, res) => {
     }
 })
 
-const PORT: number = 3001;
+const PORT = parseInt(process.env.PORT || "3001");
 const server = ViteExpress.listen(app, 3001, () => console.log("Server is listening..."));
 const wss = new WebSocketServer({ server })     // allows web socket server to listen on the same port as http server so that frontend doesn't have to connect to two different ports
 
